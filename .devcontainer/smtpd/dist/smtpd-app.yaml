@@ -1,0 +1,52 @@
+resolver:
+  cache:
+    size: 10000
+scripting:
+  files:
+  - data: |-
+      import { Redis } from "extras://redis";
+
+      $redis = Redis();
+      echo $redis->command("SET", "key", "value");
+      echo $redis->command("GET", "key");
+    id: test.hsl
+  hooks:
+    connect:
+    - data: |-
+        import { Redis } from "extras://redis";
+
+        $redis = Redis();
+        echo $redis->command("SET", "key", "value");
+        echo $redis->command("GET", "key");
+      id: default
+    eod:
+    - data: |-
+        Accept();
+      id: default
+servers:
+- id: default
+  phases:
+    connect:
+      hook: default
+    eod:
+      hook: default
+  transport: mx
+transportgroups:
+- dsn:
+    transport: mx
+  id: default
+  retry:
+    count: 30
+    intervals:
+    - interval: 60
+    - interval: 900
+    - interval: 3600
+      notify: true
+    - interval: 7200
+    - interval: 10800
+  transports:
+  - id: mx
+    session:
+      tls:
+        mode: dane
+version: '5.10'

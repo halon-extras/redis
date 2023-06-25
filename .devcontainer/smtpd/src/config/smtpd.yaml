@@ -1,0 +1,57 @@
+version: "5.10"
+servers:
+  - id: default
+    listeners:
+      - port: 25
+        address: 127.0.0.1
+environment:
+  uuid:
+    version: 4
+  controlsocket:
+    group: staff
+    chmod: "0660"
+  privdrop:
+    user: halon
+    group: halon
+  umask: "0027"
+  rlimit:
+    nofile: 70000
+plugins:
+  - id: redis
+    config:
+      type: standalone
+      host: redis-node-1
+      port: 6379
+      # user: user
+      password: password
+      pool_size: 32
+      connect_timeout: 5000
+      socket_timeout: 5000
+# plugins:
+#   - id: redis
+#     config:
+#       type: cluster
+#       host: redis-cluster-node-1
+#       port: 6379
+#       # user: user
+#       password: password
+#       pool_size: 32
+#       connect_timeout: 5000
+#       socket_timeout: 5000
+# plugins:
+#   - id: redis
+#     config:
+#       type: sentinel
+#       hosts:
+#         - host: redis-sentinel-sentinel-1
+#           port: 26379
+#         - host: redis-sentinel-sentinel-2
+#           port: 26379
+#         - host: redis-sentinel-sentinel-3
+#           port: 26379
+#       # user: user
+#       password: password
+#       pool_size: 32
+#       connect_timeout: 5000
+#       socket_timeout: 5000
+#       master_name: redis-sentinel

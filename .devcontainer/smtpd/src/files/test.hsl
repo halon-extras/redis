@@ -1,0 +1,5 @@
+import { Redis } from "extras://redis";
+
+$redis = Redis();
+echo $redis->command("SET", "key", "value");
+echo $redis->command("GET", "key");

@@ -1,0 +1,128 @@
+version: '2'
+services:
+  halon-smtpd:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        HALON_REPO_USER: ${HALON_REPO_USER}
+        HALON_REPO_PASS: ${HALON_REPO_PASS}
+    volumes:
+      - ../:/redis
+      - ./smtpd/dist:/etc/halon
+  redis-node-1:
+    image: bitnami/redis:7.0
+    volumes:
+      - redis-node-1-data:/bitnami/redis/data
+    environment:
+      - REDIS_PASSWORD=password
+  # redis-cluster-node-1:
+  #   image: docker.io/bitnami/redis-cluster:7.0
+  #   volumes:
+  #     - redis-cluster-node-1-data:/bitnami/redis/data
+  #   environment:
+  #     - REDIS_NODES=redis-cluster-node-1 redis-cluster-node-2 redis-cluster-node-3
+  #     - REDIS_PASSWORD=password
+  # redis-cluster-node-2:
+  #   image: docker.io/bitnami/redis-cluster:7.0
+  #   volumes:
+  #     - redis-cluster-node-2-data:/bitnami/redis/data
+  #   environment:
+  #     - REDIS_NODES=redis-cluster-node-1 redis-cluster-node-2 redis-cluster-node-3
+  #     - REDIS_PASSWORD=password
+  # redis-cluster-node-3:
+  #   image: docker.io/bitnami/redis-cluster:7.0
+  #   volumes:
+  #     - redis-cluster-node-3-data:/bitnami/redis/data
+  #   depends_on:
+  #     - redis-cluster-node-1
+  #     - redis-cluster-node-2
+  #   environment:
+  #     - REDIS_CLUSTER_REPLICAS=0
+  #     - REDIS_NODES=redis-cluster-node-1 redis-cluster-node-2 redis-cluster-node-3
+  #     - REDIS_CLUSTER_CREATOR=yes
+  #     - REDISCLI_AUTH=password
+  #     - REDIS_PASSWORD=password
+  # redis-sentinel-node-1:
+  #   image: bitnami/redis:7.0
+  #   volumes:
+  #     - redis-sentinel-node-1-data:/bitnami/redis/data
+  #   environment:
+  #     - REDIS_REPLICATION_MODE=master
+  #     - REDIS_MASTER_PASSWORD=password
+  #     - REDIS_PASSWORD=password
+  # redis-sentinel-node-2:
+  #   image: bitnami/redis:7.0
+  #   volumes:
+  #     - redis-sentinel-node-2-data:/bitnami/redis/data
+  #   environment:
+  #     - REDIS_REPLICATION_MODE=slave
+  #     - REDIS_MASTER_HOST=redis-sentinel-node-1
+  #     - REDIS_MASTER_PASSWORD=password
+  #     - REDIS_PASSWORD=password
+  #   depends_on:
+  #     - redis-sentinel-node-1
+  # redis-sentinel-node-3:
+  #   image: bitnami/redis:7.0
+  #   volumes:
+  #     - redis-sentinel-node-3-data:/bitnami/redis/data
+  #   environment:
+  #     - REDIS_REPLICATION_MODE=slave
+  #     - REDIS_MASTER_HOST=redis-sentinel-node-1
+  #     - REDIS_MASTER_PASSWORD=password
+  #     - REDIS_PASSWORD=password
+  #   depends_on:
+  #     - redis-sentinel-node-1
+  # redis-sentinel-sentinel-1:
+  #   image: bitnami/redis-sentinel:7.0
+  #   volumes:
+  #     - redis-sentinel-sentinel-1-data:/bitnami/redis/data
+  #   environment:
+  #     - REDIS_MASTER_SET=redis-sentinel
+  #     - REDIS_MASTER_HOST=redis-sentinel-node-1
+  #     - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=5000
+  #     - REDIS_SENTINEL_FAILOVER_TIMEOUT=5000
+  #     - REDIS_MASTER_PASSWORD=password
+  #   depends_on:
+  #     - redis-sentinel-node-1
+  #     - redis-sentinel-node-2
+  #     - redis-sentinel-node-3
+  # redis-sentinel-sentinel-2:
+  #   image: bitnami/redis-sentinel:7.0
+  #   volumes:
+  #     - redis-sentinel-sentinel-2-data:/bitnami/redis/data
+  #   environment:
+  #     - REDIS_MASTER_SET=redis-sentinel
+  #     - REDIS_MASTER_HOST=redis-sentinel-node-1
+  #     - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=5000
+  #     - REDIS_SENTINEL_FAILOVER_TIMEOUT=5000
+  #     - REDIS_MASTER_PASSWORD=password
+  #   depends_on:
+  #     - redis-sentinel-node-1
+  #     - redis-sentinel-node-2
+  #     - redis-sentinel-node-3
+  # redis-sentinel-sentinel-3:
+  #   image: bitnami/redis-sentinel:7.0
+  #   volumes:
+  #     - redis-sentinel-sentinel-3-data:/bitnami/redis/data
+  #   environment:
+  #     - REDIS_MASTER_SET=redis-sentinel
+  #     - REDIS_MASTER_HOST=redis-sentinel-node-1
+  #     - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=5000
+  #     - REDIS_SENTINEL_FAILOVER_TIMEOUT=5000
+  #     - REDIS_MASTER_PASSWORD=password
+  #   depends_on:
+  #     - redis-sentinel-node-1
+  #     - redis-sentinel-node-2
+  #     - redis-sentinel-node-3
+volumes:
+  redis-node-1-data:
+  # redis-cluster-node-1-data:
+  # redis-cluster-node-2-data:
+  # redis-cluster-node-3-data:
+  # redis-sentinel-node-1-data:
+  # redis-sentinel-node-2-data:
+  # redis-sentinel-node-3-data:
+  # redis-sentinel-sentinel-1-data:
+  # redis-sentinel-sentinel-2-data:
+  # redis-sentinel-sentinel-3-data:
