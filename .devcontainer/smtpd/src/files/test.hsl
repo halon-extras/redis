@@ -1,5 +1,13 @@
 import { Redis } from "extras://redis";
 
-$redis = Redis();
+$redis = Redis("standalone-1");
 echo $redis->command("SET", "key", "value");
 echo $redis->command("GET", "key");
+
+// $redis = Redis("cluster-1");
+// echo $redis->command("SET", "key", "value");
+// echo $redis->command("GET", "key");
+
+// $redis = Redis("sentinel-1");
+// echo $redis->command("SET", "key", "value");
+// echo $redis->command("GET", "key");

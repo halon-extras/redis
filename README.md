@@ -30,14 +30,17 @@ For the configuration schema, see [redis.schema.json](redis.schema.json).
 plugins:
   - id: redis
     config:
-      type: standalone
-      host: redis-node-1
-      port: 6379
-      user: user
-      password: password
-      pool_size: 32
-      connect_timeout: 5000
-      socket_timeout: 5000
+      default_profile: standalone-1
+      profiles:
+        - id: standalone-1
+          type: standalone
+          host: redis-node-1
+          port: 6379
+          user: user
+          password: password
+          pool_size: 32
+          connect_timeout: 5000
+          socket_timeout: 5000
 ```
 
 ### Cluster
@@ -48,14 +51,17 @@ plugins:
 plugins:
   - id: redis
     config:
-      type: cluster
-      host: redis-cluster-node-1
-      port: 6379
-      user: user
-      password: password
-      pool_size: 32
-      connect_timeout: 5000
-      socket_timeout: 5000
+      default_profile: cluster-1
+      profiles:
+        - id: cluster-1
+          type: cluster
+          host: redis-cluster-node-1
+          port: 6379
+          user: user
+          password: password
+          pool_size: 32
+          connect_timeout: 5000
+          socket_timeout: 5000
 ```
 
 ### Sentinel
@@ -66,29 +72,36 @@ plugins:
 plugins:
   - id: redis
     config:
-      type: sentinel
-      master_name: redis-sentinel
-      hosts:
-        - host: redis-sentinel-sentinel-1
-          port: 26379
-        - host: redis-sentinel-sentinel-2
-          port: 26379
-        - host: redis-sentinel-sentinel-3
-          port: 26379
-      user: user
-      password: password
-      pool_size: 32
-      connect_timeout: 5000
-      socket_timeout: 5000
+      default_profile: sentinel-1
+      profiles:
+        - id: sentinel-1
+          type: sentinel
+          master_name: redis-sentinel
+          hosts:
+            - host: redis-sentinel-sentinel-1
+              port: 26379
+            - host: redis-sentinel-sentinel-2
+              port: 26379
+            - host: redis-sentinel-sentinel-3
+              port: 26379
+          user: user
+          password: password
+          pool_size: 32
+          connect_timeout: 5000
+          socket_timeout: 5000
 ```
 
 ## Exported classes
 
 These classes needs to be [imported](https://docs.halon.io/hsl/structures.html#import) from the `extras://redis` module path.
 
-### Redis()
+### Redis([profile])
 
 The Redis class is a [redis-plus-plus](https://github.com/sewenew/redis-plus-plus) wrapper class.
+
+**Params**
+
+- profile `string` - The config profile
 
 **Returns**: class object
 

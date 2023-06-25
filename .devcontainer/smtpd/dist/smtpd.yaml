@@ -12,13 +12,16 @@ environment:
     version: 4
 plugins:
 - config:
-    connect_timeout: 5000
-    host: redis-node-1
-    password: password
-    pool_size: 32
-    port: 6379
-    socket_timeout: 5000
-    type: standalone
+    default_profile: standalone-1
+    profiles:
+    - connect_timeout: 5000
+      host: redis-node-1
+      id: standalone-1
+      password: password
+      pool_size: 32
+      port: 6379
+      socket_timeout: 5000
+      type: standalone
   id: redis
 servers:
 - id: default

@@ -19,39 +19,38 @@ environment:
 plugins:
   - id: redis
     config:
-      type: standalone
-      host: redis-node-1
-      port: 6379
-      # user: user
-      password: password
-      pool_size: 32
-      connect_timeout: 5000
-      socket_timeout: 5000
-# plugins:
-#   - id: redis
-#     config:
-#       type: cluster
-#       host: redis-cluster-node-1
-#       port: 6379
-#       # user: user
-#       password: password
-#       pool_size: 32
-#       connect_timeout: 5000
-#       socket_timeout: 5000
-# plugins:
-#   - id: redis
-#     config:
-#       type: sentinel
-#       hosts:
-#         - host: redis-sentinel-sentinel-1
-#           port: 26379
-#         - host: redis-sentinel-sentinel-2
-#           port: 26379
-#         - host: redis-sentinel-sentinel-3
-#           port: 26379
-#       # user: user
-#       password: password
-#       pool_size: 32
-#       connect_timeout: 5000
-#       socket_timeout: 5000
-#       master_name: redis-sentinel
+      default_profile: standalone-1
+      profiles:
+        - id: standalone-1
+          type: standalone
+          host: redis-node-1
+          port: 6379
+          # user: user
+          password: password
+          pool_size: 32
+          connect_timeout: 5000
+          socket_timeout: 5000
+        # - id: cluster-1
+        #   type: cluster
+        #   host: redis-cluster-node-1
+        #   port: 6379
+        #   # user: user
+        #   password: password
+        #   pool_size: 32
+        #   connect_timeout: 5000
+        #   socket_timeout: 5000
+        # - id: sentinel-1
+        #   type: sentinel
+        #   hosts:
+        #     - host: redis-sentinel-sentinel-1
+        #       port: 26379
+        #     - host: redis-sentinel-sentinel-2
+        #       port: 26379
+        #     - host: redis-sentinel-sentinel-3
+        #       port: 26379
+        #   # user: user
+        #   password: password
+        #   pool_size: 32
+        #   connect_timeout: 5000
+        #   socket_timeout: 5000
+        #   master_name: redis-sentinel
