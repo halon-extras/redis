@@ -123,7 +123,7 @@ bool Halon_init(HalonInitContext* hic)
 					redis.push_back(std::make_pair(id, std::make_shared<Redis>(connection_options, pool_options)));
 				}
 			} catch (const Error &err) {
-				syslog(LOG_INFO, "redis: %s", err.what());
+				syslog(LOG_CRIT, "redis: %s", err.what());
 				return false;
 			}
 		}
@@ -135,7 +135,7 @@ bool Halon_init(HalonInitContext* hic)
 			connection_options.host = "127.0.0.1";
 			redis.push_back(std::make_pair(default_profile, std::make_shared<Redis>(connection_options)));
 		} catch (const Error &err) {
-			syslog(LOG_INFO, "redis: %s", err.what());
+			syslog(LOG_CRIT, "redis: %s", err.what());
 			return false;
 		}
 	}
