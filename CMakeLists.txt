@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
-PROJECT("redis" VERSION 1.0.0)
+PROJECT("redis" VERSION 1.0.1)
 
 # RPM/DEB and CENTOS7/CENTOS8/ROCKY9/UBU1804/UBU2004/UBU2204
 IF (EXISTS "${CMAKE_CURRENT_BINARY_DIR}/OSRELEASE.txt")
@@ -81,7 +81,7 @@ ENDIF()
 IF (CPACK_GENERATOR MATCHES "RPM")
 	INSTALL(FILES /usr/local/lib64/libhiredis.so.1.1.0 DESTINATION /usr/local/lib64)
 	INSTALL(FILES /usr/local/lib64/libhiredis_ssl.so.1.1.0 DESTINATION /usr/local/lib64)
-	INSTALL(FILES /usr/local/lib64/libredis++.so.1.3.9 DESTINATION /usr/local/lib/lib64)
+	INSTALL(FILES /usr/local/lib64/libredis++.so.1.3.9 DESTINATION /usr/local/lib64 RENAME libredis++.so.1)
 ENDIF()
 
 SET(CMAKE_INSTALL_PREFIX "/opt/halon")
