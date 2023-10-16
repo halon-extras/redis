@@ -55,8 +55,13 @@ plugins:
       profiles:
         - id: cluster-1
           type: cluster
-          host: redis-cluster-node-1
-          port: 6379
+          hosts:
+            - host: redis-cluster-node-1
+              port: 6379
+            - host: redis-cluster-node-2
+              port: 6379
+            - host: redis-cluster-node-3
+              port: 6379
           user: user
           password: password
           pool_size: 32

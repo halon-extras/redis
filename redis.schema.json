@@ -39,6 +39,24 @@
 								"enum": ["cluster"],
 								"description": "The type"
 							},
+							"hosts": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"additionalProperties": false,
+									"required": ["host"],
+									"properties": {
+										"host": { "$ref": "#/definitions/host" },
+										"port": {
+											"type": "integer",
+											"minimum": 1,
+											"default": 6379,
+											"description": "The port"
+										}
+									}
+								},
+								"description": "The hosts"
+							},
 							"host": { "$ref": "#/definitions/host" },
 							"port": { "$ref": "#/definitions/port" },
 							"user": { "$ref": "#/definitions/user" },

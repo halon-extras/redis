@@ -86,40 +86,64 @@ bool Halon_init(HalonInitContext* hic)
 				HalonConfig* l;
 				while ((l = HalonMTA_config_array_get(j, k++)))
 				{
-					std::string sentinel_host;
+					std::string _host;
 					const char* m = HalonMTA_config_string_get(HalonMTA_config_object_get(l, "host"), nullptr);
-					sentinel_host = m ? m : "127.0.0.1";
-					int sentinel_port;
+					_host = m ? m : "127.0.0.1";
+					int _port;
 					const char* n = HalonMTA_config_string_get(HalonMTA_config_object_get(l, "port"), nullptr);
-					sentinel_port = n ? strtoul(n, nullptr, 10) : 26379;
-					hosts.push_back(std::make_pair(sentinel_host, sentinel_port));
+					_port = n ? strtoul(n, nullptr, 10) : type == "sentinel" ? 26379 : 6379;
+					hosts.push_back(std::make_pair(_host, _port));
 				}
 			}
+			if (type == "cluster" && hosts.empty()) hosts.push_back(std::make_pair(host, port)); // Backward compatibility
 
 			std::string id;
 			const char* o = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "id"), nullptr);
 			id = o;
-
-			ConnectionOptions connection_options;
-			if ((type == "standalone" || type == "cluster") && !host.empty()) connection_options.host = host;
-			if ((type == "standalone" || type == "cluster") && port) connection_options.port = port;
-			if (!user.empty()) connection_options.user = user;
-			if (!password.empty()) connection_options.password = password;
-			if (connect_timeout) connection_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
-			if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
 
 			ConnectionPoolOptions pool_options;
 			if (pool_size) pool_options.size = pool_size;
 
 			try {
 				if (type == "cluster") {
-					redis_cluster.push_back(std::make_pair(id, std::make_shared<RedisCluster>(connection_options, pool_options)));
+					for (size_t p = 0; p < hosts.size(); ++p)
+					{
+						try {
+							auto _host = hosts[p];
+							ConnectionOptions connection_options;
+							if (!_host.first.empty()) connection_options.host = _host.first;
+							if (_host.second) connection_options.port = _host.second;
+							if (!user.empty()) connection_options.user = user;
+							if (!password.empty()) connection_options.password = password;
+							if (connect_timeout) connection_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
+							if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
+							redis_cluster.push_back(std::make_pair(id, std::make_shared<RedisCluster>(connection_options, pool_options)));
+							break;
+						} catch (const Error &err) {
+							if (p == (hosts.size() - 1)) {
+								syslog(LOG_CRIT, "redis: %s", err.what());
+								return false;
+							}
+						}
+					}
 				} else if (type == "sentinel") {
+					ConnectionOptions connection_options;
+					if (!user.empty()) connection_options.user = user;
+					if (!password.empty()) connection_options.password = password;
+					if (connect_timeout) connection_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
+					if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
 					SentinelOptions sentinel_options;
 					sentinel_options.nodes = hosts;
 					auto sentinel = std::make_shared<Sentinel>(sentinel_options);
 					redis.push_back(std::make_pair(id, std::make_shared<Redis>(sentinel, master_name, Role::MASTER, connection_options, pool_options)));
 				} else {
+					ConnectionOptions connection_options;
+					if (!host.empty()) connection_options.host = host;
+					if (port) connection_options.port = port;
+					if (!user.empty()) connection_options.user = user;
+					if (!password.empty()) connection_options.password = password;
+					if (connect_timeout) connection_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
+					if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
 					redis.push_back(std::make_pair(id, std::make_shared<Redis>(connection_options, pool_options)));
 				}
 			} catch (const Error &err) {
