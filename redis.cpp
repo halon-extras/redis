@@ -163,10 +163,10 @@ void HSLRedis_command(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLVal
 				HalonMTA_hsl_value_set(e, HALONMTA_HSL_TYPE_EXCEPTION, "argument is not a string", 0);
 				return;
 			}
-			char* a = nullptr;
+			char* av = nullptr;
 			size_t al;
-			HalonMTA_hsl_value_get(a_, HALONMTA_HSL_TYPE_STRING, &a, &al);
-			argv.push_back(a);
+			HalonMTA_hsl_value_get(a_, HALONMTA_HSL_TYPE_STRING, &av, &al);
+			argv.push_back(av);
 			lens.push_back(al);
 		}
 
