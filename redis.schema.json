@@ -47,12 +47,7 @@
 									"required": ["host"],
 									"properties": {
 										"host": { "$ref": "#/definitions/host" },
-										"port": {
-											"type": "integer",
-											"minimum": 1,
-											"default": 6379,
-											"description": "The port"
-										}
+										"port": { "$ref": "#/definitions/port" }
 									}
 								},
 								"description": "The hosts"
