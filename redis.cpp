@@ -50,9 +50,9 @@ bool Halon_init(HalonInitContext* hic)
 			const char* b = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "host"), nullptr);
 			host = b ? b : "127.0.0.1";
 
-			int port;
+			int port = 6379;
 			const char* c = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "port"), nullptr);
-			port = c ? strtoul(c, nullptr, 10) : 6379;
+			if (c) port = strtoul(c, nullptr, 10);
 
 			std::string user;
 			const char* d = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "user"), nullptr);
@@ -62,15 +62,15 @@ bool Halon_init(HalonInitContext* hic)
 			const char* e = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "password"), nullptr);
 			if (e) password = e;
 
-			int pool_size;
+			int pool_size = 1;
 			const char* f = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "pool_size"), nullptr);
-			pool_size = f ? strtoul(f, nullptr, 10) : 1;
+			if (f) pool_size = strtoul(f, nullptr, 10);
 
-			int connect_timeout;
+			int connect_timeout = 0;
 			const char* g = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "connect_timeout"), nullptr);
 			if (g) connect_timeout = strtoul(g, nullptr, 10);
 
-			int socket_timeout;
+			int socket_timeout = 0;
 			const char* h = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "socket_timeout"), nullptr);
 			if (h) socket_timeout = strtoul(h, nullptr, 10);
 
