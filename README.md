@@ -41,6 +41,11 @@ plugins:
           pool_size: 32
           connect_timeout: 5000
           socket_timeout: 5000
+          wait_timeout: 5000
+          connection_lifetime: 600000
+          connection_idle_time: 5000
+          keep_alive: true
+          db: 0
 ```
 
 ### Cluster
@@ -67,6 +72,11 @@ plugins:
           pool_size: 32
           connect_timeout: 5000
           socket_timeout: 5000
+          wait_timeout: 5000
+          connection_lifetime: 600000
+          connection_idle_time: 5000
+          keep_alive: true
+          db: 0
 ```
 
 ### Sentinel
@@ -94,6 +104,11 @@ plugins:
           pool_size: 32
           connect_timeout: 5000
           socket_timeout: 5000
+          wait_timeout: 5000
+          connection_lifetime: 600000
+          connection_idle_time: 5000
+          keep_alive: true
+          db: 0
 ```
 
 ## Exported classes

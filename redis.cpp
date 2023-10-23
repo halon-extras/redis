@@ -74,6 +74,26 @@ bool Halon_init(HalonInitContext* hic)
 			const char* h = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "socket_timeout"), nullptr);
 			if (h) socket_timeout = strtoul(h, nullptr, 10);
 
+			int wait_timeout = 0;
+			const char* q = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "wait_timeout"), nullptr);
+			if (q) wait_timeout = strtoul(q, nullptr, 10);
+
+			int connection_lifetime = 0;
+			const char* r = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "connection_lifetime"), nullptr);
+			if (r) connection_lifetime = strtoul(r, nullptr, 10);
+
+			int connection_idle_time = 0;
+			const char* s = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "connection_idle_time"), nullptr);
+			if (s) connection_idle_time = strtoul(s, nullptr, 10);
+
+			bool keep_alive = false;
+			const char* t = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "keep_alive"), nullptr);
+			if (t) keep_alive = (strcmp(t, "true") == 0 || strcmp(t, "TRUE") == 0) ? true : false;
+
+			int db = 0;
+			const char* u = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "db"), nullptr);
+			if (u) db = strtoul(u, nullptr, 10);
+
 			std::string master_name;
 			const char* i = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "master_name"), nullptr);
 			if (i) master_name = i;
@@ -103,6 +123,9 @@ bool Halon_init(HalonInitContext* hic)
 
 			ConnectionPoolOptions pool_options;
 			if (pool_size) pool_options.size = pool_size;
+			if (wait_timeout) pool_options.wait_timeout = std::chrono::milliseconds(wait_timeout);
+			if (connection_lifetime) pool_options.connection_lifetime = std::chrono::milliseconds(connection_lifetime);
+			if (connection_idle_time) pool_options.connection_idle_time = std::chrono::milliseconds(connection_idle_time);
 
 			try {
 				if (type == "cluster") {
@@ -117,6 +140,8 @@ bool Halon_init(HalonInitContext* hic)
 							if (!password.empty()) connection_options.password = password;
 							if (connect_timeout) connection_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
 							if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
+							if (keep_alive) connection_options.keep_alive = keep_alive;
+							if (db) connection_options.db = db;
 							redis_cluster.push_back(std::make_pair(id, std::make_shared<RedisCluster>(connection_options, pool_options)));
 							break;
 						} catch (const Error &err) {
@@ -132,6 +157,8 @@ bool Halon_init(HalonInitContext* hic)
 					if (!password.empty()) connection_options.password = password;
 					if (connect_timeout) connection_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
 					if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
+					if (keep_alive) connection_options.keep_alive = keep_alive;
+					if (db) connection_options.db = db;
 					SentinelOptions sentinel_options;
 					sentinel_options.nodes = hosts;
 					auto sentinel = std::make_shared<Sentinel>(sentinel_options);
@@ -144,6 +171,8 @@ bool Halon_init(HalonInitContext* hic)
 					if (!password.empty()) connection_options.password = password;
 					if (connect_timeout) connection_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
 					if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
+					if (keep_alive) connection_options.keep_alive = keep_alive;
+					if (db) connection_options.db = db;
 					redis.push_back(std::make_pair(id, std::make_shared<Redis>(connection_options, pool_options)));
 				}
 			} catch (const Error &err) {

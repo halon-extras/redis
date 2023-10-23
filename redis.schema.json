@@ -25,7 +25,12 @@
 							"password": { "$ref": "#/definitions/password" },
 							"pool_size": { "$ref": "#/definitions/pool_size" },
 							"connect_timeout": { "$ref": "#/definitions/connect_timeout" },
-							"socket_timeout": { "$ref": "#/definitions/socket_timeout" }
+							"socket_timeout": { "$ref": "#/definitions/socket_timeout" },
+							"wait_timeout": { "$ref": "#/definitions/wait_timeout" },
+							"connection_lifetime": { "$ref": "#/definitions/connection_lifetime" },
+							"connection_idle_time": { "$ref": "#/definitions/connection_idle_time" },
+							"keep_alive": { "$ref": "#/definitions/keep_alive" },
+							"db": { "$ref": "#/definitions/db" }
 						}
 					},
 					{
@@ -58,7 +63,12 @@
 							"password": { "$ref": "#/definitions/password" },
 							"pool_size": { "$ref": "#/definitions/pool_size" },
 							"connect_timeout": { "$ref": "#/definitions/connect_timeout" },
-							"socket_timeout": { "$ref": "#/definitions/socket_timeout" }
+							"socket_timeout": { "$ref": "#/definitions/socket_timeout" },
+							"wait_timeout": { "$ref": "#/definitions/wait_timeout" },
+							"connection_lifetime": { "$ref": "#/definitions/connection_lifetime" },
+							"connection_idle_time": { "$ref": "#/definitions/connection_idle_time" },
+							"keep_alive": { "$ref": "#/definitions/keep_alive" },
+							"db": { "$ref": "#/definitions/db" }
 						}
 					},
 					{
@@ -95,6 +105,11 @@
 							"pool_size": { "$ref": "#/definitions/pool_size" },
 							"connect_timeout": { "$ref": "#/definitions/connect_timeout" },
 							"socket_timeout": { "$ref": "#/definitions/socket_timeout" },
+							"wait_timeout": { "$ref": "#/definitions/wait_timeout" },
+							"connection_lifetime": { "$ref": "#/definitions/connection_lifetime" },
+							"connection_idle_time": { "$ref": "#/definitions/connection_idle_time" },
+							"keep_alive": { "$ref": "#/definitions/keep_alive" },
+							"db": { "$ref": "#/definitions/db" },
 							"master_name": { "$ref": "#/definitions/master_name" }
 						}
 					}
@@ -150,6 +165,33 @@
 			"type": "integer",
 			"minimum": 1,
 			"description": "The socket timeout (in milliseconds)"
+		},
+		"wait_timeout": {
+			"type": "integer",
+			"minimum": 1,
+			"description": "Max time to wait for a connection (in milliseconds)"
+		},
+		"connection_lifetime": {
+			"type": "integer",
+			"minimum": 1,
+			"description": "Max lifetime of a connection (in milliseconds)"
+		},
+		"connection_idle_time": {
+			"type": "integer",
+			"minimum": 1,
+			"description": "Max idle time of a connection (in milliseconds)"
+		},
+		"keep_alive": {
+			"type": "boolean",
+			"default": false,
+			"description": "Enable keep alive"
+		},
+		"db": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 15,
+			"default": 0,
+			"description": "The database"
 		},
 		"master_name": {
 			"type": "string",
