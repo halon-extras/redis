@@ -72,6 +72,7 @@ INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/redis.so.link" DESTINATION plugins/au
 INSTALL(FILES "LICENSE" DESTINATION share/doc/plugins/redis)
 INSTALL(FILES "/hiredis/LICENSE" DESTINATION share/doc/plugins/redis RENAME LICENSE.hiredis)
 INSTALL(FILES "/redis-plus-plus/LICENSE" DESTINATION share/doc/plugins/redis RENAME LICENSE.redis-plus-plus)
+INSTALL(FILES "sbom.json" DESTINATION share/sbom/plugins RENAME redis.json)
 
 IF (CPACK_GENERATOR MATCHES "DEB")
 	INSTALL(FILES /usr/local/lib/libhiredis.so.1.1.0 DESTINATION /usr/local/lib)
