@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Redis",
+        "parameters": {
+            "optional": [
+                {
+                    "name": "profile",
+                    "type": "string"
+                }
+            ],
+            "required": []
+        },
+        "methods": [
+            {
+                "name": "command",
+                "parameters": {
+                    "required": [
+                        {
+                            "name": "arguments",
+                            "type": "string",
+                            "variadic": true
+                        }
+                    ],
+                    "optional": []
+                },
+                "returnType": "string, number, boolean, array or none",
+                "detail": "Redis->command(string ...$arguments): string, number, boolean, array or none",
+                "value": "command($0)",
+                "documentation": "Send a generic Redis command. RESP2 values and supported RESP3 values are converted to HSL types.",
+                "link": "[Full documentation](https://github.com/halon-extras/redis)"
+            }
+        ],
+        "detail": "Redis([string $profile])",
+        "value": "Redis($0)",
+        "documentation": "The Redis class is a redis-plus-plus wrapper.",
+        "link": "[Full documentation](https://github.com/halon-extras/redis)"
+    }
+]
