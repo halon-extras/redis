@@ -21,17 +21,17 @@ RUN yum install -y cmake3 make gcc-c++ rpm-build git openssl-devel
 
 RUN mkdir /tmp/halon
 RUN cd /tmp/halon \
-    && curl -O -L https://github.com/redis/hiredis/archive/refs/tags/v1.1.0.tar.gz \
-    && echo "fe6d21741ec7f3fc9df409d921f47dfc73a4d8ff64f4ac6f1d95f951bf7f53d6 v1.1.0.tar.gz" | sha256sum -c \
-    && tar -zxvf v1.1.0.tar.gz && cd hiredis-1.1.0 \
+    && curl -O -L https://github.com/redis/hiredis/archive/refs/tags/v1.4.1.tar.gz \
+    && echo "ca3180359a8b1275838a45415851f8cd5c411e27bdbf18f4823012e45507d2e4 v1.4.1.tar.gz" | sha256sum -c \
+    && tar -zxvf v1.4.1.tar.gz && cd hiredis-1.4.1 \
     && mkdir -p /hiredis && cp COPYING /hiredis/LICENSE \
     && mkdir build && cd build \
     && cmake -DENABLE_SSL=ON .. \
     && make && make install
 RUN cd /tmp/halon \
-    && curl -O -L https://github.com/sewenew/redis-plus-plus/archive/refs/tags/1.3.9.tar.gz \
-    && echo "f890bee2bf81e85619e8cdd1189b9249daddf1562a89e04e2b685ba4ca37e0f8 1.3.9.tar.gz" | sha256sum -c \
-    && tar -zxvf 1.3.9.tar.gz && cd redis-plus-plus-1.3.9 \
+    && curl -O -L https://github.com/sewenew/redis-plus-plus/archive/refs/tags/1.3.15.tar.gz \
+    && echo "e9288fda74f1501c62dd9ab7d6a8dc67de51aa4d5b7c71770baa51987a945941 1.3.15.tar.gz" | sha256sum -c \
+    && tar -zxvf 1.3.15.tar.gz && cd redis-plus-plus-1.3.15 \
     && mkdir -p /redis-plus-plus && cp LICENSE /redis-plus-plus/LICENSE \
     && mkdir build && cd build \
     && cmake -DREDIS_PLUS_PLUS_USE_TLS=ON .. \
