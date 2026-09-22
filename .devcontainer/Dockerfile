@@ -38,8 +38,6 @@ RUN cd /tmp/halon \
     && make && make install
 RUN rm -rf /tmp/halon
 
-RUN ldconfig
-
 RUN echo -n "UBU2404" > /OSRELEASE.txt
 
 RUN apt-get install -y supervisor

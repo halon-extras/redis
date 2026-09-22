@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 
-PROJECT("redis" VERSION 1.2.1)
+PROJECT("redis" VERSION 1.2.2)
 
 # RPM/DEB and CENTOS8/ROCKY9/ROCKY10/UBU2204/UBU2404/UBU2604
 IF (EXISTS "${CMAKE_CURRENT_BINARY_DIR}/OSRELEASE.txt")
@@ -84,17 +84,17 @@ INSTALL(FILES "/redis-plus-plus/LICENSE" DESTINATION share/doc/plugins/redis REN
 INSTALL(FILES "sbom.json" DESTINATION share/sbom/plugins RENAME redis.json)
 
 IF (CPACK_GENERATOR MATCHES "DEB")
-	INSTALL(FILES /usr/local/lib/libhiredis.so.1.4.0 DESTINATION /usr/local/lib)
-	INSTALL(FILES /usr/local/lib/libhiredis_ssl.so.1.4.0 DESTINATION /usr/local/lib)
-	INSTALL(FILES /usr/local/lib/libredis++.so.1.3.15 DESTINATION /usr/local/lib)
+	INSTALL(FILES /usr/local/lib/libhiredis.so.1.4.0 DESTINATION /usr/local/lib RENAME libhiredis.so.1)
+	INSTALL(FILES /usr/local/lib/libhiredis_ssl.so.1.4.0 DESTINATION /usr/local/lib RENAME libhiredis_ssl.so.1)
+	INSTALL(FILES /usr/local/lib/libredis++.so.1.3.15 DESTINATION /usr/local/lib RENAME libredis++.so.1)
 ENDIF()
 IF (OSRELEASE MATCHES "AZURE3")
-	INSTALL(FILES /usr/local/lib64/libhiredis.so.1.4.0 DESTINATION /usr/lib64)
-	INSTALL(FILES /usr/local/lib64/libhiredis_ssl.so.1.4.0 DESTINATION /usr/lib64)
+	INSTALL(FILES /usr/local/lib64/libhiredis.so.1.4.0 DESTINATION /usr/lib64 RENAME libhiredis.so.1)
+	INSTALL(FILES /usr/local/lib64/libhiredis_ssl.so.1.4.0 DESTINATION /usr/lib64 RENAME libhiredis_ssl.so.1)
 	INSTALL(FILES /usr/local/lib64/libredis++.so.1.3.15 DESTINATION /usr/lib64 RENAME libredis++.so.1)
 ELSEIF (CPACK_GENERATOR MATCHES "RPM")
-	INSTALL(FILES /usr/local/lib64/libhiredis.so.1.4.0 DESTINATION /usr/local/lib64)
-	INSTALL(FILES /usr/local/lib64/libhiredis_ssl.so.1.4.0 DESTINATION /usr/local/lib64)
+	INSTALL(FILES /usr/local/lib64/libhiredis.so.1.4.0 DESTINATION /usr/local/lib64 RENAME libhiredis.so.1)
+	INSTALL(FILES /usr/local/lib64/libhiredis_ssl.so.1.4.0 DESTINATION /usr/local/lib64 RENAME libhiredis_ssl.so.1)
 	INSTALL(FILES /usr/local/lib64/libredis++.so.1.3.15 DESTINATION /usr/local/lib64 RENAME libredis++.so.1)
 ENDIF()
 
