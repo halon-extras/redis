@@ -109,7 +109,7 @@ plugins:
           connect_timeout: 5000
           socket_timeout: 5000
           wait_timeout: 5000
-          connection_lifetime: 600000
+          connection_lifetime: 5000
           connection_idle_time: 5000
           keep_alive: true
           db: 0
@@ -117,6 +117,8 @@ plugins:
 ```
 
 The `user` and `password` options are used for the master, and `sentinel_user` and `sentinel_password` for the sentinels. The `connect_timeout` and `socket_timeout` options apply to both, and default to 1000 ms for sentinel profiles (they cannot be 0). Blocking commands such as `BLPOP` that wait longer than `socket_timeout` will time out.
+
+The master is only looked up again through the sentinels when a connection is created. During a failover where the old master is still running, pooled connections keep writing to it until the sentinels demote it, and those writes are lost. Set `connection_lifetime` to a low value, such as 5000 ms, to limit how long that can last.
 
 ## Exported classes
 
@@ -146,7 +148,11 @@ Send a generic command.
 
 **Returns**:
 
-Values are converted to HSL types, types defined in RESP2 and partly the RESP3 format is supported. The protocol version is set per profile using the `resp` option (default `2`). With `resp: 3`, replies such as `HGETALL` are returned as maps (keyed arrays) instead of flat lists. Changing the protocol with `HELLO` through `command()` is not recommended, as it only affects the pooled connection the command happened to use.
+Values are converted to HSL types, types defined in RESP2 and partly the RESP3 format is supported. The protocol version is set per profile using the `resp` option (default `2`). With `resp: 3`, replies such as `HGETALL` are returned as maps (keyed arrays) instead of flat lists.
+
+An error reply throws an exception. Errors nested inside an array, such as a failed command in an `EXEC` result or `redis.error_reply()` in a table returned by a Lua script, are returned as strings instead (e.g. `[1, "ERR boom"]`).
+
+Each call uses a connection from the profile's pool, so commands that change connection state, such as `HELLO`, `SELECT`, `MULTI`/`EXEC` and `WATCH`, only affect the connection that call happened to use, and later calls may use another one. Use the `db` and `resp` options instead of `SELECT` and `HELLO`, and Lua scripts (`EVAL`) instead of transactions (not with cluster profiles, see below).
 
 ```
 echo $redis->command("SET", "key", "value"); // OK
@@ -157,6 +163,6 @@ echo $redis->command("SET", "key", "value"); // OK
 With a cluster profile, `command()` uses the argument after the command name as the key that decides which node receives the command. This means that:
 
 - At least two arguments are required, so commands without arguments such as `PING` throw.
-- Commands whose first argument isn't a key, such as `EVAL`, `EVALSHA`, `FCALL`, `XREAD`, `XREADGROUP`, `BITOP`, `LMPOP`, `ZMPOP`, `OBJECT` and `MEMORY`, are sent to the wrong node and fail with a `MOVED` error.
+- Commands whose first argument isn't a key, such as `EVAL`, `EVALSHA`, `FCALL`, `XREAD`, `XREADGROUP`, `BITOP`, `LMPOP`, `ZMPOP`, `OBJECT` and `MEMORY`, are routed by that argument instead (for `EVAL`, the script). They only work when it happens to hash to the same node as the key, and otherwise throw `Failed to send command with key: ...`, so don't use them with cluster profiles.
 - Commands without keys, such as `INFO server`, are sent to a single node, chosen by the hash of their first argument.
 - As always with Redis Cluster, keys used together in one command must be in the same hash slot (use hash tags such as `{user1}:name` and `{user1}:age`).
