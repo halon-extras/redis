@@ -2,6 +2,7 @@
 #include <HalonMTA.h>
 #include <sw/redis++/redis++.h>
 #include <queue>
+#include <algorithm>
 #include <chrono>
 
 using namespace sw::redis;
@@ -129,6 +130,12 @@ bool Halon_init(HalonInitContext* hic)
 				return false;
 			}
 			id = o;
+			if (std::any_of(redis.begin(), redis.end(), [&id](const auto& p) { return p.first == id; }) ||
+				std::any_of(redis_cluster.begin(), redis_cluster.end(), [&id](const auto& p) { return p.first == id; }))
+			{
+				syslog(LOG_CRIT, "redis: duplicate profile id: %s", id.c_str());
+				return false;
+			}
 
 			ConnectionPoolOptions pool_options;
 			if (pool_size) pool_options.size = pool_size;
