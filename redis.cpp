@@ -230,6 +230,13 @@ bool Halon_init(HalonInitContext* hic)
 	return true;
 }
 
+HALON_EXPORT
+void Halon_cleanup()
+{
+	redis.clear();
+	redis_cluster.clear();
+}
+
 void MyRedis_free(void* ptr)
 {
 	MyRedis* x = (MyRedis*)ptr;
