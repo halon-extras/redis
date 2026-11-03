@@ -103,6 +103,14 @@ bool Halon_init(HalonInitContext* hic)
 			const char* i = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "master_name"), nullptr);
 			if (i) master_name = i;
 
+			std::string sentinel_user;
+			const char* su = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "sentinel_user"), nullptr);
+			if (su) sentinel_user = su;
+
+			std::string sentinel_password;
+			const char* sp = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "sentinel_password"), nullptr);
+			if (sp) sentinel_password = sp;
+
 			std::vector<std::pair<std::string, int>> hosts;
 			auto j = HalonMTA_config_object_get(z, "hosts");
 			if (j)
@@ -169,6 +177,9 @@ bool Halon_init(HalonInitContext* hic)
 						}
 					}
 				} else if (type == "sentinel") {
+					// redis++ requires non-zero timeouts with sentinel
+					if (!connect_timeout) connect_timeout = 1000;
+					if (!socket_timeout) socket_timeout = 1000;
 					ConnectionOptions connection_options;
 					if (!user.empty()) connection_options.user = user;
 					if (!password.empty()) connection_options.password = password;
@@ -179,6 +190,10 @@ bool Halon_init(HalonInitContext* hic)
 					if (resp) connection_options.resp = resp;
 					SentinelOptions sentinel_options;
 					sentinel_options.nodes = hosts;
+					if (!sentinel_user.empty()) sentinel_options.user = sentinel_user;
+					if (!sentinel_password.empty()) sentinel_options.password = sentinel_password;
+					if (connect_timeout) sentinel_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
+					if (socket_timeout) sentinel_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
 					auto sentinel = std::make_shared<Sentinel>(sentinel_options);
 					redis.push_back(std::make_pair(id, std::make_shared<Redis>(sentinel, master_name, Role::MASTER, connection_options, pool_options)));
 				} else {

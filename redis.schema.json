@@ -118,7 +118,17 @@
 							"keep_alive": { "$ref": "#/definitions/keep_alive" },
 							"db": { "$ref": "#/definitions/db" },
 							"resp": { "$ref": "#/definitions/resp" },
-							"master_name": { "$ref": "#/definitions/master_name" }
+							"master_name": { "$ref": "#/definitions/master_name" },
+							"sentinel_user": {
+								"type": "string",
+								"minLength": 1,
+								"description": "The sentinel user"
+							},
+							"sentinel_password": {
+								"type": "string",
+								"minLength": 1,
+								"description": "The sentinel password"
+							}
 						}
 					}
 				]

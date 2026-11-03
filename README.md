@@ -94,6 +94,8 @@ plugins:
         - id: sentinel-1
           type: sentinel
           master_name: redis-sentinel
+          sentinel_user: user
+          sentinel_password: password
           hosts:
             - host: redis-sentinel-sentinel-1
               port: 26379
@@ -113,6 +115,8 @@ plugins:
           db: 0
           resp: 2
 ```
+
+The `user` and `password` options are used for the master, and `sentinel_user` and `sentinel_password` for the sentinels. The `connect_timeout` and `socket_timeout` options apply to both, and default to 1000 ms for sentinel profiles (they cannot be 0). Blocking commands such as `BLPOP` that wait longer than `socket_timeout` will time out.
 
 ## Exported classes
 
