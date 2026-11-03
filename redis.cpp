@@ -4,6 +4,7 @@
 #include <queue>
 #include <algorithm>
 #include <chrono>
+#include <cstring>
 
 using namespace sw::redis;
 
@@ -183,8 +184,8 @@ bool Halon_init(HalonInitContext* hic)
 					ConnectionOptions connection_options;
 					if (!user.empty()) connection_options.user = user;
 					if (!password.empty()) connection_options.password = password;
-					if (connect_timeout) connection_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
-					if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
+					connection_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
+					connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
 					if (keep_alive) connection_options.keep_alive = keep_alive;
 					if (db) connection_options.db = db;
 					if (resp) connection_options.resp = resp;
@@ -192,8 +193,8 @@ bool Halon_init(HalonInitContext* hic)
 					sentinel_options.nodes = hosts;
 					if (!sentinel_user.empty()) sentinel_options.user = sentinel_user;
 					if (!sentinel_password.empty()) sentinel_options.password = sentinel_password;
-					if (connect_timeout) sentinel_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
-					if (socket_timeout) sentinel_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
+					sentinel_options.connect_timeout = std::chrono::milliseconds(connect_timeout);
+					sentinel_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
 					auto sentinel = std::make_shared<Sentinel>(sentinel_options);
 					redis.push_back(std::make_pair(id, std::make_shared<Redis>(sentinel, master_name, Role::MASTER, connection_options, pool_options)));
 				} else {
@@ -394,7 +395,7 @@ void HSLRedis(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
 	profile = a ? a : default_profile;
 
 	std::shared_ptr<sw::redis::Redis> r;
-	for (auto p : redis)
+	for (const auto& p : redis)
 	{
 		if (p.first == profile)
 		{
@@ -406,7 +407,7 @@ void HSLRedis(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
 	std::shared_ptr<sw::redis::RedisCluster> rc;
 	if (!r)
 	{
-		for (auto p : redis_cluster)
+		for (const auto& p : redis_cluster)
 		{
 			if (p.first == profile)
 			{
