@@ -46,6 +46,7 @@ plugins:
           connection_idle_time: 5000
           keep_alive: true
           db: 0
+          resp: 2
 ```
 
 ### Cluster
@@ -77,6 +78,7 @@ plugins:
           connection_idle_time: 5000
           keep_alive: true
           db: 0
+          resp: 2
 ```
 
 ### Sentinel
@@ -109,6 +111,7 @@ plugins:
           connection_idle_time: 5000
           keep_alive: true
           db: 0
+          resp: 2
 ```
 
 ## Exported classes
@@ -139,7 +142,7 @@ Send a generic command.
 
 **Returns**:
 
-Values are converted to HSL types, types defined in RESP2 and partly the RESP3 format is supported.
+Values are converted to HSL types, types defined in RESP2 and partly the RESP3 format is supported. The protocol version is set per profile using the `resp` option (default `2`). With `resp: 3`, replies such as `HGETALL` are returned as maps (keyed arrays) instead of flat lists. Changing the protocol with `HELLO` through `command()` is not recommended, as it only affects the pooled connection the command happened to use.
 
 ```
 echo $redis->command("SET", "key", "value"); // OK

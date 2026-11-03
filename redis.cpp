@@ -94,6 +94,10 @@ bool Halon_init(HalonInitContext* hic)
 			const char* u = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "db"), nullptr);
 			if (u) db = strtoul(u, nullptr, 10);
 
+			int resp = 0;
+			const char* v = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "resp"), nullptr);
+			if (v) resp = strtoul(v, nullptr, 10);
+
 			std::string master_name;
 			const char* i = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "master_name"), nullptr);
 			if (i) master_name = i;
@@ -147,6 +151,7 @@ bool Halon_init(HalonInitContext* hic)
 							if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
 							if (keep_alive) connection_options.keep_alive = keep_alive;
 							if (db) connection_options.db = db;
+							if (resp) connection_options.resp = resp;
 							redis_cluster.push_back(std::make_pair(id, std::make_shared<RedisCluster>(connection_options, pool_options)));
 							break;
 						} catch (const Error &err) {
@@ -164,6 +169,7 @@ bool Halon_init(HalonInitContext* hic)
 					if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
 					if (keep_alive) connection_options.keep_alive = keep_alive;
 					if (db) connection_options.db = db;
+					if (resp) connection_options.resp = resp;
 					SentinelOptions sentinel_options;
 					sentinel_options.nodes = hosts;
 					auto sentinel = std::make_shared<Sentinel>(sentinel_options);
@@ -178,6 +184,7 @@ bool Halon_init(HalonInitContext* hic)
 					if (socket_timeout) connection_options.socket_timeout = std::chrono::milliseconds(socket_timeout);
 					if (keep_alive) connection_options.keep_alive = keep_alive;
 					if (db) connection_options.db = db;
+					if (resp) connection_options.resp = resp;
 					redis.push_back(std::make_pair(id, std::make_shared<Redis>(connection_options, pool_options)));
 				}
 			} catch (const Error &err) {
@@ -275,6 +282,7 @@ void HSLRedis_command(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLVal
 				case REDIS_REPLY_STATUS:
 				case REDIS_REPLY_ERROR:
 				case REDIS_REPLY_BIGNUM:
+				case REDIS_REPLY_VERB:
 				{
 					HalonMTA_hsl_value_set(v, HALONMTA_HSL_TYPE_STRING, r->str, r->len);
 				}
@@ -328,9 +336,6 @@ void HSLRedis_command(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLVal
 				break;
 				case REDIS_REPLY_PUSH:
 					/* unsupported */
-				break;
-				case REDIS_REPLY_VERB:
-					/* unsupported: string */
 				break;
 			}
 		}
