@@ -119,6 +119,11 @@ bool Halon_init(HalonInitContext* hic)
 
 			std::string id;
 			const char* o = HalonMTA_config_string_get(HalonMTA_config_object_get(z, "id"), nullptr);
+			if (!o)
+			{
+				syslog(LOG_CRIT, "redis: profile is missing id");
+				return false;
+			}
 			id = o;
 
 			ConnectionPoolOptions pool_options;
