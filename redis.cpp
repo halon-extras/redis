@@ -20,6 +20,13 @@ std::vector<std::pair<std::string, std::shared_ptr<RedisCluster>>> redis_cluster
 
 std::string default_profile;
 
+static bool profile_exists(const std::string& id)
+{
+	auto match = [&id](const auto& p) { return p.first == id; };
+	return std::any_of(redis.begin(), redis.end(), match) ||
+		std::any_of(redis_cluster.begin(), redis_cluster.end(), match);
+}
+
 HALON_EXPORT
 int Halon_version()
 {
@@ -139,8 +146,7 @@ bool Halon_init(HalonInitContext* hic)
 				return false;
 			}
 			id = o;
-			if (std::any_of(redis.begin(), redis.end(), [&id](const auto& p) { return p.first == id; }) ||
-				std::any_of(redis_cluster.begin(), redis_cluster.end(), [&id](const auto& p) { return p.first == id; }))
+			if (profile_exists(id))
 			{
 				syslog(LOG_CRIT, "redis: duplicate profile id: %s", id.c_str());
 				return false;
@@ -214,6 +220,11 @@ bool Halon_init(HalonInitContext* hic)
 				syslog(LOG_CRIT, "redis: %s", err.what());
 				return false;
 			}
+		}
+		if (dp && !profile_exists(default_profile))
+		{
+			syslog(LOG_CRIT, "redis: default_profile not found: %s", default_profile.c_str());
+			return false;
 		}
 	}
 	else
