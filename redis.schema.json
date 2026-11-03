@@ -205,7 +205,7 @@
 			"type": "integer",
 			"enum": [2, 3],
 			"default": 2,
-			"description": "The RESP protocol version"
+			"description": "The RESP version (2 or 3)"
 		},
 		"master_name": {
 			"type": "string",
