@@ -210,8 +210,7 @@ void MyRedis_free(void* ptr)
 void HSLRedis_command(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
 {
 	try {
-		std::vector<const char*> argv;
-		std::vector<size_t> lens;
+		std::vector<StringView> argv;
 		size_t a = 0;
 		while (HalonHSLValue* a_ = HalonMTA_hsl_argument_get(args, a++))
 		{
@@ -224,8 +223,7 @@ void HSLRedis_command(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLVal
 			char* av = nullptr;
 			size_t al;
 			HalonMTA_hsl_value_get(a_, HALONMTA_HSL_TYPE_STRING, &av, &al);
-			argv.push_back(av);
-			lens.push_back(al);
+			argv.emplace_back(av, al);
 		}
 
 		MyRedis* ptr = (MyRedis*)HalonMTA_hsl_object_ptr_get(hhc);
