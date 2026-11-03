@@ -151,3 +151,12 @@ Values are converted to HSL types, types defined in RESP2 and partly the RESP3 f
 ```
 echo $redis->command("SET", "key", "value"); // OK
 ```
+
+##### Cluster
+
+With a cluster profile, `command()` uses the argument after the command name as the key that decides which node receives the command. This means that:
+
+- At least two arguments are required, so commands without arguments such as `PING` throw.
+- Commands whose first argument isn't a key, such as `EVAL`, `EVALSHA`, `FCALL`, `XREAD`, `XREADGROUP`, `BITOP`, `LMPOP`, `ZMPOP`, `OBJECT` and `MEMORY`, are sent to the wrong node and fail with a `MOVED` error.
+- Commands without keys, such as `INFO server`, are sent to a single node, chosen by the hash of their first argument.
+- As always with Redis Cluster, keys used together in one command must be in the same hash slot (use hash tags such as `{user1}:name` and `{user1}:age`).
