@@ -69,7 +69,12 @@
 							"connection_lifetime": { "$ref": "#/definitions/connection_lifetime" },
 							"connection_idle_time": { "$ref": "#/definitions/connection_idle_time" },
 							"keep_alive": { "$ref": "#/definitions/keep_alive" },
-							"db": { "$ref": "#/definitions/db" },
+							"db": {
+								"type": "integer",
+								"enum": [0],
+								"default": 0,
+								"description": "The database (Redis Cluster only supports database 0)"
+							},
 							"resp": { "$ref": "#/definitions/resp" }
 						}
 					},
